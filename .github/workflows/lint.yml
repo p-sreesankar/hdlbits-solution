@@ -1,0 +1,21 @@
+name: Hardware Lint Verification
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  verilator_lint:
+    runs-on: ubuntu-latest
+    container:
+      image: verilator/verilator:latest
+    steps:
+      - name: Checkout Repository Code
+        uses: actions/checkout@v4
+
+      - name: Execute Verilator Lint Check
+        run: |
+          echo "Starting absolute syntax evaluation..."
+          verilator --lint-only -Wall rtl/*.v
