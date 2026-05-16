@@ -18,8 +18,15 @@ jobs:
       - name: Checkout Repository Code
         uses: actions/checkout@v4
 
-      - name: Discover and Lint All Subdirectories
+      - name: Generate File Manifest and Execute Verilator
         run: |
-          echo "Executing recursive structural syntax scanning..."
-          # Find all Verilog files in all subfolders under rtl/ and run Verilator
-          find rtl/ -type f \( -name "*.v" -o -name "*.sv" \) | xargs -I {} verilator --lint-only -Wall {}
+          echo "Scanning all nested subdirectories for Verilog source assets..."
+          
+          # Find all source files and print them into a flat manifest file
+          find rtl/ -type f \( -name "*.v" -o -name "*.sv" \) > files_to_lint.f
+          
+          echo "Manifest File Created:"
+          cat files_to_lint.f
+          
+          # Pass the file list directly to Verilator using the standard -f flag
+          verilator --lint-only -Wall -f files_to_lint.f
