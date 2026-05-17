@@ -7,7 +7,8 @@ module top_module(
 );
 
     assign out_or_bitwise = a | b;
-    assign out_or_logical = a || b;
-    assign out_not = ~{b, a};
+    // Unary reduction OR (|a) condenses the 3-bit bus to a 1-bit boolean
+    assign out_or_logical = (|a) || (|b);
+    assign out_not = {~b, ~a};
     
 endmodule
