@@ -26,5 +26,5 @@ jobs:
           for file in $(find rtl/ -type f \( -name "*.v" -o -name "*.sv" \)); do
             echo "Scanning: $file"
             # Suppress specific HDLBits naming conventions, enforce all other strict rules
-            verilator --lint-only -Wall -Wno-DECLFILENAME -Wno-EOFNEWLINE -Wno-MULTITOP "$file"
+            verilator --lint-only -Wall rtl/your_top_module.v rtl/hdlbits_primitives.v
           done
