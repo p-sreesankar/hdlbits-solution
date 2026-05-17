@@ -20,11 +20,11 @@ jobs:
 
       - name: Execute Isolated RTL Linting
         run: |
-          echo "Initiating isolated syntax evaluation..."
+          echo "Initiating isolated syntax evaluation with primitive linkage..."
           
-          # Process each file as an independent design entity
-          for file in $(find rtl/ -type f \( -name "*.v" -o -name "*.sv" \)); do
+          # Process each file as an independent design entity, explicitly excluding the primitive library
+          for file in $(find rtl/ -type f \( -name "*.v" -o -name "*.sv" \) ! -name "hdlbits_primitives.v"); do
             echo "Scanning: $file"
-            # Suppress specific HDLBits naming conventions, enforce all other strict rules
-            verilator --lint-only -Wall rtl/your_top_module.v rtl/hdlbits_primitives.v
+            # Link the current file with the primitive definitions to satisfy structural checks
+            verilator --lint-only -Wall -Wno-DECLFILENAME -Wno-EOFNEWLINE -Wno-MULTITOP "$file" rtl/hdlbits_primitives.v
           done
