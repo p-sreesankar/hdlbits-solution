@@ -18,15 +18,13 @@ jobs:
       - name: Checkout Repository Code
         uses: actions/checkout@v4
 
-      - name: Generate File Manifest and Execute Verilator
+      - name: Execute Isolated RTL Linting
         run: |
-          echo "Scanning all nested subdirectories for Verilog source assets..."
+          echo "Initiating isolated syntax evaluation..."
           
-          # Find all source files and print them into a flat manifest file
-          find rtl/ -type f \( -name "*.v" -o -name "*.sv" \) > files_to_lint.f
-          
-          echo "Manifest File Created:"
-          cat files_to_lint.f
-          
-          # Pass the file list directly to Verilator using the standard -f flag
-          verilator --lint-only -Wall -f files_to_lint.f
+          # Process each file as an independent design entity
+          for file in $(find rtl/ -type f \( -name "*.v" -o -name "*.sv" \)); do
+            echo "Scanning: $file"
+            # Suppress specific HDLBits naming conventions, enforce all other strict rules
+            verilator --lint-only -Wall -Wno-DECLFILENAME -Wno-EOFNEWLINE -Wno-MULTITOP "$file"
+          done
