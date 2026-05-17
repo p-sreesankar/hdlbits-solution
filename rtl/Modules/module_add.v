@@ -7,7 +7,8 @@ module top_module(
 
     
     add16 instance1 (.a( a[15:0] ),.b( b[15:0] ), .cin(1'b0), .cout(intermediate_wire), .sum(sum[15:0]));
+    /* verilator lint_off PINCONNECTEMPTY */
     add16 instance2 (.a( a[31:16] ),.b( b[31:16] ), .cin(intermediate_wire), .cout(), .sum(sum[31:16]));
-
+    /* verilator lint_on PINCONNECTEMPTY */
 
 endmodule

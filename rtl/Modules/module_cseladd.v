@@ -9,9 +9,11 @@ module top_module(
     wire [15:0] intermediate_sum_two;
     
     add16 instance1 (.a(a[15:0]), .b(b[15:0]), .cin(1'b0), .sum(sum[15:0]), .cout(intermediate_carry));
+    /* verilator lint_off PINCONNECTEMPTY */
     add16 instance2 (.a(a[31:16]), .b(b[31:16]), .cin(1'b0), .sum(intermediate_sum_one), .cout());
     add16 instance3 (.a(a[31:16]), .b(b[31:16]), .cin(1'b1), .sum(intermediate_sum_two), .cout()); 
-                     
+    /* verilator lint_on PINCONNECTEMPTY */
+    
     mux_2_to_1_32_bit instance4 (.a(intermediate_sum_one), .b(intermediate_sum_two), .sel(intermediate_carry), .op(sum[31:16]));
            
 endmodule
